@@ -1,0 +1,224 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --rosa-claro: #ffe4ec;
+  --rosa: #ff8fab;
+  --rojo: #e63958;
+  --rojo-oscuro: #b8223f;
+  --papel: #fffaf5;
+  --texto: #5a2a36;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: "Quicksand", sans-serif;
+  color: var(--texto);
+  background: radial-gradient(circle at top, #ffd6e3, #ff9fb8 60%, #f0708f);
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 16px;
+}
+
+h1 {
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(2.2rem, 7vw, 3.8rem);
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 3px 12px rgba(184, 34, 63, 0.45);
+  animation: latido 2.4s ease-in-out infinite;
+}
+
+/* ---------- Corazones flotando ---------- */
+
+.corazones span {
+  position: fixed;
+  bottom: -40px;
+  left: var(--x);
+  width: var(--s);
+  height: var(--s);
+  background: rgba(255, 255, 255, 0.7);
+  transform: rotate(-45deg);
+  animation: subir var(--t) linear var(--d) infinite;
+  opacity: 0;
+}
+
+.corazones span::before,
+.corazones span::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.corazones span::before { top: -50%; left: 0; }
+.corazones span::after  { top: 0; left: 50%; }
+
+@keyframes subir {
+  0%   { transform: translate(0, 0) rotate(-45deg); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translate(30px, -55vh) rotate(-45deg); }
+  100% { transform: translate(-20px, -115vh) rotate(-45deg); opacity: 0; }
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.06); }
+  30%      { transform: scale(1); }
+  45%      { transform: scale(1.04); }
+}
+
+/* ---------- Sobre ---------- */
+
+.sobre {
+  position: relative;
+  width: 340px;
+  height: 220px;
+  margin-top: 185px; /* espacio para que la carta suba */
+  background: var(--rojo-oscuro);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 20px 40px rgba(120, 20, 45, 0.35);
+  cursor: pointer;
+  perspective: 800px;
+  transition: transform 0.3s;
+}
+
+.sobre:hover {
+  transform: translateY(-6px);
+}
+
+.carta {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 8px;
+  height: 200px;
+  padding: 20px 22px;
+  background: var(--papel);
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  transition: transform 0.6s ease 0s;
+}
+
+.carta p + p {
+  margin-top: 10px;
+}
+
+.para,
+.firma {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.5rem;
+  color: var(--rojo);
+}
+
+.frente {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--rojo);
+  border-radius: 0 0 10px 10px;
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+}
+
+.solapa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  background: var(--rosa);
+  clip-path: polygon(0 0, 100% 0, 50% 58%);
+  transform-origin: top;
+  transition: transform 0.5s ease 0.5s, z-index 0s 0.75s;
+}
+
+.sello {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  z-index: 4;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rojo-oscuro);
+  color: #fff;
+  font-size: 1.3rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease 0.6s, opacity 0.3s ease 0.6s;
+}
+
+/* ---------- Sobre abierto ---------- */
+
+#abrir:checked + .sobre .sello {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition-delay: 0s;
+}
+
+#abrir:checked + .sobre .solapa {
+  transform: rotateX(180deg);
+  z-index: 0;
+  transition: transform 0.5s ease 0.2s, z-index 0s 0.45s;
+}
+
+#abrir:checked + .sobre .carta {
+  transform: translateY(-175px);
+  transition-delay: 0.7s;
+}
+
+/* ---------- Pistas ---------- */
+
+.pista {
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.pista.abierto,
+#abrir:checked ~ .pista.cerrado {
+  display: none;
+}
+
+#abrir:checked ~ .pista.abierto {
+  display: block;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+
+@media (max-width: 400px) {
+  .sobre {
+    transform: scale(0.85);
+    margin-top: 150px;
+  }
+  .sobre:hover {
+    transform: scale(0.85) translateY(-6px);
+  }
+}
+
+.corazon {
+  color: #fff;
+  -webkit-text-stroke: 1px var(--rojo);
+}
